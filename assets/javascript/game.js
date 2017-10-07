@@ -1,9 +1,8 @@
 
 
 var spellsArray = ["alohomora", 
-"avada kedavra", "confundo",
-"expelliarmus", "levicorpus", 
-"morsmordre", "obliviate",
+"avada kedavra", "confundo","expelliarmus",
+"levicorpus", "morsmordre", "obliviate", 
 "prior incantato", "riddikulus"];
 var chosenSpell = "";
 var letterSpell = "";
@@ -45,9 +44,62 @@ console.log(numBlanks);
 console.log(spellBlanks);
 }
 
+function letterCheck (letter) {
+	
+	var isLetterInWord = false;
+	for (var i = 0; i < numBlanks; i++) {
+		if (chosenSpell[i] == letter) {
+			isLetterInWord = true;
+			alert("Letter found!");
+		}
+	}
+	//Checks if letter is in spell, then sends it to corresponding blank
+	if(isLetterInWord){
+		for (var i = 0; i < numBlanks; i++) {
+		if(chosenSpell[i] == letter){
+			spellBlanks[i] = letter;
+			}
+		}
+	}
+	//Letter wasn't found
+	else{
+		wrongGuess.push(letter);
+		guessLeft--
+	}
+
+
+
+	console.log(spellBlanks);
+}
+
+function finishRound() {
+	console.log("Win Count: " + winCount + "| Guesses Left: " + guessLeft)
+	//update HTML to reflect correct stats
+	document.getElementById("guessRemain").innerHTML = guessLeft;
+	document.getElementById("guessSpell").innerHTML = spellBlanks.join(" ");
+	document.getElementById("lettersGuessed").innerHTML= wrongGuess.join(" ");
+
+	//Did user win?
+	if (letterSpell.toString() == spellBlanks.toString()) {
+		winCount++
+		alert("You won!")
+	// update HTML with win count
+	document.getElementById("numberWins").innerHTML = winCount
+	beginGame();
+	}
+	else if (guessLeft == 0){
+		alert("Loser!");
+		beginGame();
+	}
+}
+
 beginGame();
 
 document.onkeyup = function(event) {
 	var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+	letterCheck(userGuess);
+	finishRound();
+
+
 	console.log(userGuess);
 }
