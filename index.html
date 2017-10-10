@@ -2,19 +2,43 @@
 <html>
 <head>
 	<title> Hangman </title>
-	
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Limelight" rel="stylesheet">
+
 </head>
 <body>
-	<h1> What's That Wizard Spell? </h1>
-	<h3> A Harry Potter Themed Hangman </h3>
-	<p> Press any key to get started! </p>
-	<p> Wins: <span id="numberWins"></span></p>
-	<p id="guessSpell"> Guess the spell! </p>
-	<p> Secret Word </p>
-	<p> Number of guesses remaining: <span id="guessRemain"></span></p>
-	<p> Letters already guessed: <span id="lettersGuessed"></span></p>
-
-
+	<div class="container jumbotron" id="background-image">
+		<div class= "row">
+		<h1 id="title"> What's That Wizard Spell? </h1>
+		<h3> A Harry Potter Themed Hangman </h3>
+		</div>
+	</div>
+	<div class="container row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading" id="panel-dark">
+					<h4> Press any key to get started.. </h4>
+				</div>
+				<div class="panel-body">
+					<p> Name that spell? </p>
+					<p id="guessSpell" class="secret-word"> Guess the spell! </p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading" id="panel-dark">
+					<h4> Wizard Stats: </h4>
+				</div>
+				<div class="panel-body">
+					<p> Wins: <span id="numberWins"></span></p>
+					<p> Number of guesses remaining: <span id="guessRemain"></span></p>
+					<p class="secret-word"> Letters already guessed: <span id="lettersGuessed"></span></p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script src="assets/javascript/game.js"></script>
 </body>
 </html>

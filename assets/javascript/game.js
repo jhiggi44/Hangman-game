@@ -50,7 +50,6 @@ function letterCheck (letter) {
 	for (var i = 0; i < numBlanks; i++) {
 		if (chosenSpell[i] == letter) {
 			isLetterInWord = true;
-			alert("Letter found!");
 		}
 	}
 	//Checks if letter is in spell, then sends it to corresponding blank
@@ -82,13 +81,13 @@ function finishRound() {
 	//Did user win?
 	if (letterSpell.toString() == spellBlanks.toString()) {
 		winCount++
-		alert("You won!")
+		alert("You're a great wizard!")
 	// update HTML with win count
 	document.getElementById("numberWins").innerHTML = winCount
 	beginGame();
 	}
 	else if (guessLeft == 0){
-		alert("Loser!");
+		alert("Are you sure you're a wizard");
 		beginGame();
 	}
 }

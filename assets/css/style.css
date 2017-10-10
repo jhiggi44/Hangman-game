@@ -1,0 +1,42 @@
+body{
+	background-color: black;
+}
+#background-image {
+	background-image: url("../images/hogwarts-hall.jpg");
+	width: 100%;
+	height: auto;
+	background-position: 0% 100%;
+}
+#title {
+	font-family: 'Limelight', cursive;
+	font-size: 60px;
+	text-align: center;
+	color: #eeba30;
+	}
+h3 {
+	font-family: 'Limelight', cursive;
+	font-size: 40px;
+	text-align: center;
+	color: #eeba30;
+	}
+h4 {
+	font-family: 'Limelight', cursive;
+	font-size: 30px;
+	text-align: center;
+	color: #eeba30;
+}
+p {
+	font-family: 'Limelight', cursive;
+	font-size: 20px;
+	text-align: center;
+	color: black;
+}
+.secret-word {
+	font-family: 'Limelight', cursive;
+	font-size: 30px;
+	text-align: center;
+	color: purple;
+}
+#panel-dark {
+	background-color: #740001;
+}
