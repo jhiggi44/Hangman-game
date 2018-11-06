@@ -29,13 +29,13 @@ p {
 	font-family: 'Limelight', cursive;
 	font-size: 20px;
 	text-align: center;
-	color: black;
+	color: #eeba30;
 }
 .secret-word {
 	font-family: 'Limelight', cursive;
 	font-size: 30px;
 	text-align: center;
-	color: purple;
+	color: rgb(196, 7, 196);
 }
 #panel-dark {
 	background-color: #740001;

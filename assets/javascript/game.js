@@ -8,14 +8,14 @@ window.onload = function() {
 	"prior incantato", "riddikulus"];
 
 	// spell variables
-	let spellToGuess;
+	let secretSpell;
 	let lettersInSpell;
 	let letterMask = [];
 
 	// round variables
 	let guessesLeft;
 	let numLettersLeft;
-	let wrongGuesses = [];
+	let lettersGuessed = [];
 
 	// game variables 
 	let winCount = 0;
@@ -31,13 +31,12 @@ window.onload = function() {
 
 		// reset round variables 
 		guessesLeft = 11;
-		lettersGuessed = 0;
-		wrongGuesses = [];
+		lettersGuessed = [];
 
 		// initialize spell/word variables
 		letterMask = [];
-		spellToGuess = spellsArray[Math.floor(Math.random() * spellsArray.length)];
-		lettersInSpell = spellToGuess.split("");
+		secretSpell = spellsArray[Math.floor(Math.random() * spellsArray.length)];
+		lettersInSpell = secretSpell.split("");
 
 		// counts spaces - the number of spaces indicates the spell is more than one word long
 		let numSpaces = 0;
@@ -69,24 +68,34 @@ window.onload = function() {
 
 	}
 
-	function letterCheck (letter) {
+	async function letterCheck (letter) {
 		
-		var isLetterInWord = false;
-		for (var i = 0; i < letterMask.length; i++) {
-			if (spellToGuess[i] == letter) {
+		let isLetterInWord = false;
+		for (let i = 0; i < letterMask.length; i++) {
+			if (secretSpell[i] == letter) {
 				isLetterInWord = true;
 			}
 		}
+
+		let hasLeeterBeenGuessed = false;
+		for (let i = 0; i < lettersGuessed.length; i++) {
+			if (lettersGuessed[i] == letter) {
+				hasLeeterBeenGuessed = true;
+			}
+		}
+
 		//Checks if letter is in spell, then sends it to corresponding blank
-		if(isLetterInWord){
+		if(isLetterInWord && !hasLeeterBeenGuessed){
 			for (var i = 0; i < lettersInSpell.length; i++) {
-				if(spellToGuess[i] == letter){
+				if(secretSpell[i] == letter){
 					letterMask[i] = letter;
 					numLettersLeft--;
 					}
 				}
-			} else{
-				wrongGuesses.push(letter);
+			lettersGuessed.push(letter);
+			console.log("letters left #: " + numLettersLeft);
+			} else if (!hasLeeterBeenGuessed) { 
+				lettersGuessed.push(letter);
 				guessesLeft--
 			}
 	}
@@ -96,12 +105,12 @@ window.onload = function() {
 		// update HTML with current stats
 		guessesLeftDisplay.innerHTML = guessesLeft;
 		secretSpellDisplay.innerHTML = letterMask.join(" ");
-		lettersGuessedDisplay.innerHTML = wrongGuesses.join(" ");
+		lettersGuessedDisplay.innerHTML = lettersGuessed.join(" ");
 
 		//Did user win?
 		if (numLettersLeft == 0) {
 			winCount++
-			alert(`You're a great wizard! The spell was ${spellToGuess}`);
+			alert(`You're a great wizard! The spell was ${secretSpell}`);
 			winsDisplay.innerHTML = winCount
 			beginGame();
 		} else if (guessesLeft == 0){
@@ -113,12 +122,16 @@ window.onload = function() {
 
 	beginGame();
 
-	document.onkeyup = function(event) {
+	// document.onkeyup = function(event) {
+	// 	let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+	// 	letterCheck(userGuess);
+	// 	finishRound();
+	// }
+
+	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
 		letterCheck(userGuess);
 		finishRound();
-	}
-
-
+	});
 
 }
