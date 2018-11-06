@@ -1,104 +1,124 @@
 
+window.onload = function() {
 
-var spellsArray = ["alohomora", 
-"avada kedavra", "confundo","expelliarmus",
-"levicorpus", "morsmordre", "obliviate", 
-"prior incantato", "riddikulus"];
-var chosenSpell = "";
-var letterSpell = "";
-var numBlanks = 0;
-var spellBlanks = [];
-var wrongGuess = [];
+	// the list of spells for the user to guess
+	let spellsArray = ["alohomora", 
+	"avada kedavra", "confundo","expelliarmus",
+	"levicorpus", "morsmordre", "obliviate", 
+	"prior incantato", "riddikulus"];
 
-var winCount = 0;
-var guessLeft = 11;
-// this starts the game by randomizing the spells. 
-function beginGame () {
-chosenSpell = spellsArray[Math.floor(Math.random()*spellsArray.length)];
-letterSpell = chosenSpell.split("");
-numBlanks = letterSpell.length;
+	// spell variables
+	let spellToGuess;
+	let lettersInSpell;
+	let letterMask = [];
 
-	//This resets the game to current score and 11 guesses
-	guessLeft = 11;
-	wrongGuess = [];
-	spellBlanks = [];
+	// round variables
+	let guessesLeft;
+	let numLettersLeft;
+	let wrongGuesses = [];
 
-	//the "for loop" makes an array out of the variable spellBlanks
-	//.push adds a "_" string to the array for every letter of the word. 
-	for (var i=0; i<numBlanks; i++){
-		spellBlanks.push("_");
-	}
-	//this writes the array spellBlanks to the HTML tag with id "guessSpell"
-	//.join("") makes the array of "_" strings into one "_ _ _ _ _" string.
-	document.getElementById("guessSpell").innerHTML = spellBlanks.join(" ");
-	//this writes the number of guesses to HTML tag with class "guessRemain"
-	document.getElementById("guessRemain").innerHTML = guessLeft;
-	document.getElementById("numberWins").innerHTML = winCount;
+	// game variables 
+	let winCount = 0;
 
+	// DOM variables 
+	let secretSpellDisplay = document.getElementById("guessSpell");	
+	let guessesLeftDisplay = document.getElementById("guessRemain");
+	let winsDisplay = document.getElementById("numberWins");
+	let lettersGuessedDisplay = document.getElementById("lettersGuessed");
 
+	// a function to create the game 
+	function beginGame () {
 
+		// reset round variables 
+		guessesLeft = 11;
+		lettersGuessed = 0;
+		wrongGuesses = [];
 
-console.log(chosenSpell);
-console.log(letterSpell);
-console.log(numBlanks);
-console.log(spellBlanks);
-}
+		// initialize spell/word variables
+		letterMask = [];
+		spellToGuess = spellsArray[Math.floor(Math.random() * spellsArray.length)];
+		lettersInSpell = spellToGuess.split("");
 
-function letterCheck (letter) {
-	
-	var isLetterInWord = false;
-	for (var i = 0; i < numBlanks; i++) {
-		if (chosenSpell[i] == letter) {
-			isLetterInWord = true;
+		// counts spaces - the number of spaces indicates the spell is more than one word long
+		let numSpaces = 0;
+		for (let i = 0; i < lettersInSpell.length; i++) {
+			if (lettersInSpell[i] == " ") {
+				numSpaces++;
+			} 
 		}
-	}
-	//Checks if letter is in spell, then sends it to corresponding blank
-	if(isLetterInWord){
-		for (var i = 0; i < numBlanks; i++) {
-		if(chosenSpell[i] == letter){
-			spellBlanks[i] = letter;
+
+		// the numLettersLeftToGuess equals the length lettersInSpell minus the spaces
+		numLettersLeft = lettersInSpell.length - numSpaces;
+
+		// here we create the mask, if the letter is a space push a <br> tag into the array, 
+		// which will seperate words when using innerHTML
+		for (let i = 0; i < lettersInSpell.length; i++){
+			if (lettersInSpell[i] === " ") {
+				letterMask.push("<br>");
+			} else {
+				letterMask.push("_");
 			}
 		}
+		
+		// console.log('letter mask: ' + letterMask);
+
+		// update HTML page
+		secretSpellDisplay.innerHTML = letterMask.join(" ");
+		guessesLeftDisplay.innerHTML = guessesLeft;
+		winsDisplay.innerHTML = winCount;
+
 	}
-	//Letter wasn't found
-	else{
-		wrongGuess.push(letter);
-		guessLeft--
+
+	function letterCheck (letter) {
+		
+		var isLetterInWord = false;
+		for (var i = 0; i < letterMask.length; i++) {
+			if (spellToGuess[i] == letter) {
+				isLetterInWord = true;
+			}
+		}
+		//Checks if letter is in spell, then sends it to corresponding blank
+		if(isLetterInWord){
+			for (var i = 0; i < lettersInSpell.length; i++) {
+				if(spellToGuess[i] == letter){
+					letterMask[i] = letter;
+					numLettersLeft--;
+					}
+				}
+			} else{
+				wrongGuesses.push(letter);
+				guessesLeft--
+			}
 	}
 
+	function finishRound() {
 
+		// update HTML with current stats
+		guessesLeftDisplay.innerHTML = guessesLeft;
+		secretSpellDisplay.innerHTML = letterMask.join(" ");
+		lettersGuessedDisplay.innerHTML = wrongGuesses.join(" ");
 
-	console.log(spellBlanks);
-}
+		//Did user win?
+		if (numLettersLeft == 0) {
+			winCount++
+			alert(`You're a great wizard! The spell was ${spellToGuess}`);
+			winsDisplay.innerHTML = winCount
+			beginGame();
+		} else if (guessesLeft == 0){
+			alert("Are you sure you're a wizard");
+			beginGame();
+		}
 
-function finishRound() {
-	console.log("Win Count: " + winCount + "| Guesses Left: " + guessLeft)
-	//update HTML to reflect correct stats
-	document.getElementById("guessRemain").innerHTML = guessLeft;
-	document.getElementById("guessSpell").innerHTML = spellBlanks.join(" ");
-	document.getElementById("lettersGuessed").innerHTML= wrongGuess.join(" ");
+	}
 
-	//Did user win?
-	if (letterSpell.toString() == spellBlanks.toString()) {
-		winCount++
-		alert("You're a great wizard!")
-	// update HTML with win count
-	document.getElementById("numberWins").innerHTML = winCount
 	beginGame();
+
+	document.onkeyup = function(event) {
+		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+		letterCheck(userGuess);
+		finishRound();
 	}
-	else if (guessLeft == 0){
-		alert("Are you sure you're a wizard");
-		beginGame();
-	}
-}
-
-beginGame();
-
-document.onkeyup = function(event) {
-	var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
-	letterCheck(userGuess);
-	finishRound();
 
 
-	console.log(userGuess);
+
 }
