@@ -77,15 +77,15 @@ window.onload = function() {
 			}
 		}
 
-		let hasLeeterBeenGuessed = false;
+		let hasLetterBeenGuessed = false;
 		for (let i = 0; i < lettersGuessed.length; i++) {
 			if (lettersGuessed[i] == letter) {
-				hasLeeterBeenGuessed = true;
+				hasLetterBeenGuessed = true;
 			}
 		}
 
 		//Checks if letter is in spell, then sends it to corresponding blank
-		if(isLetterInWord && !hasLeeterBeenGuessed){
+		if(isLetterInWord && !hasLetterBeenGuessed){
 			for (var i = 0; i < lettersInSpell.length; i++) {
 				if(secretSpell[i] == letter){
 					letterMask[i] = letter;
@@ -94,7 +94,7 @@ window.onload = function() {
 				}
 			lettersGuessed.push(letter);
 			console.log("letters left #: " + numLettersLeft);
-			} else if (!hasLeeterBeenGuessed) { 
+			} else if (!hasLetterBeenGuessed) { 
 				lettersGuessed.push(letter);
 				guessesLeft--
 			}
