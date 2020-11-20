@@ -117,16 +117,9 @@ window.onload = function() {
 			alert("Are you sure you're a wizard");
 			beginGame();
 		}
-
 	}
 
 	beginGame();
-
-	// document.onkeyup = function(event) {
-	// 	let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
-	// 	letterCheck(userGuess);
-	// 	finishRound();
-	// }
 
 	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
@@ -134,4 +127,35 @@ window.onload = function() {
 		finishRound();
 	});
 
+	function generatePossibleHint() {
+		const rand = Math.floor(Math.random() * Math.floor(lettersInSpell.length))
+		return lettersInSpell[rand]
+	}
+
+	function getHint() {
+		let possibleHint = generatePossibleHint();
+		if (!lettersGuessed.length) return possibleHint;
+		while(true) {
+			if (!lettersGuessed.includes(possibleHint)) {
+				return possibleHint;
+			}
+			possibleHint = generatePossibleHint();
+		}
+	}
+
+	document.getElementById("hint").addEventListener("click", (e) => {
+		e.preventDefault();
+		const hint = getHint();
+		console.log("Hint: ", hint);
+		for (var i = 0; i < lettersInSpell.length; i++) {
+			if(secretSpell[i] == hint){
+				letterMask[i] = hint;
+				numLettersLeft--;
+				}
+			}
+		lettersGuessed.push(hint);
+		console.log("letterMask: ", letterMask);
+		console.log("lettersGuessed: ", lettersGuessed);
+		finishRound();
+	});
 }
