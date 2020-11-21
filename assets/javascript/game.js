@@ -1,3 +1,4 @@
+import { Hint } from "./hint.js";
 
 window.onload = function() {
 
@@ -127,26 +128,9 @@ window.onload = function() {
 		finishRound();
 	});
 
-	function generatePossibleHint() {
-		const rand = Math.floor(Math.random() * Math.floor(lettersInSpell.length))
-		return lettersInSpell[rand]
-	}
-
-	function getHint() {
-		let possibleHint = generatePossibleHint();
-		if (!lettersGuessed.length) return possibleHint;
-		while(true) {
-			if (!lettersGuessed.includes(possibleHint)) {
-				return possibleHint;
-			}
-			possibleHint = generatePossibleHint();
-		}
-	}
-
 	document.getElementById("hint").addEventListener("click", (e) => {
 		e.preventDefault();
-		const hint = getHint();
-		console.log("Hint: ", hint);
+		const hint = new Hint(secretSpell).notIn(lettersGuessed);
 		for (var i = 0; i < lettersInSpell.length; i++) {
 			if(secretSpell[i] == hint){
 				letterMask[i] = hint;
@@ -154,8 +138,6 @@ window.onload = function() {
 				}
 			}
 		lettersGuessed.push(hint);
-		console.log("letterMask: ", letterMask);
-		console.log("lettersGuessed: ", lettersGuessed);
 		finishRound();
 	});
 }
