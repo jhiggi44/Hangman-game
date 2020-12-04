@@ -1,4 +1,3 @@
-const { expect } = require("@jest/globals");
 import { Hint } from "../assets/javascript/hint";
 
 describe('#notIn', () => {
