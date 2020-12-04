@@ -78,6 +78,10 @@ window.onload = function() {
 		}
 	}
 
+	function updateLettersGuessed(letter) {
+		lettersGuessed.push(letter);
+	}
+
 	async function letterCheck (letter) {
 		
 		let isLetterInWord = false;
@@ -95,10 +99,10 @@ window.onload = function() {
 		}
 
 		//Checks if letter is in spell, then sends it to corresponding blank
-		if(isLetterInWord && !hasLetterBeenGuessed){
-			updateNumLettersLeft(letter)
+		if(isLetterInWord && !hasLetterBeenGuessed) {
+			updateNumLettersLeft(letter);
+			updateLettersGuessed(letter);
 
-			lettersGuessed.push(letter);
 			console.log("letters left #: " + numLettersLeft);
 			} else if (!hasLetterBeenGuessed) { 
 				lettersGuessed.push(letter);
@@ -137,8 +141,7 @@ window.onload = function() {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
 		updateNumLettersLeft(hint);
-		lettersGuessed.push(hint);
-
+		updateLettersGuessed(hint);
 
 		finishRound();
 	});
