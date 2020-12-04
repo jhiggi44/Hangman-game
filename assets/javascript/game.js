@@ -1,78 +1,83 @@
 import { Hint } from "./hint.js";
 
+// the list of spells for the user to guess
+let spellsArray = ["alohomora", 
+"avada kedavra", "confundo","expelliarmus",
+"levicorpus", "morsmordre", "obliviate", 
+"prior incantato", "riddikulus"];
+
+// spell variables
+let secretSpell;
+let lettersInSpell;
+let letterMask = [];
+
+// round variables
+let guessesLeft;
+let numLettersLeft;
+let lettersGuessed = [];
+
+// game variables
+let winCount = 0;
+
+// a function to create the game 
+function beginGame () {
+
+	// reset round variables 
+	guessesLeft = 11;
+	lettersGuessed = [];
+
+	// initialize spell/word variables
+	letterMask = [];
+	secretSpell = spellsArray[Math.floor(Math.random() * spellsArray.length)];
+	lettersInSpell = secretSpell.split("");
+
+	// counts spaces - the number of spaces indicates the spell is more than one word long
+	let numSpaces = 0;
+	for (let i = 0; i < lettersInSpell.length; i++) {
+		if (lettersInSpell[i] == " ") {
+			numSpaces++;
+		} 
+	}
+
+	// the numLettersLeftToGuess equals the length lettersInSpell minus the spaces
+	numLettersLeft = lettersInSpell.length - numSpaces;
+
+	// here we create the mask, if the letter is a space push a <br> tag into the array, 
+	// which will seperate words when using innerHTML
+	for (let i = 0; i < lettersInSpell.length; i++){
+		if (lettersInSpell[i] === " ") {
+			letterMask.push("<br>");
+		} else {
+			letterMask.push("_");
+		}
+	}
+}
+
+function pageInit(letterMask, guessesLeft, winCount) {
+	// update HTML page
+	secretSpellDisplay.innerHTML = letterMask.join(" ");
+	guessesLeftDisplay.innerHTML = guessesLeft;
+	winsDisplay.innerHTML = winCount;
+}
+
 window.onload = function() {
-
-	// the list of spells for the user to guess
-	let spellsArray = ["alohomora", 
-	"avada kedavra", "confundo","expelliarmus",
-	"levicorpus", "morsmordre", "obliviate", 
-	"prior incantato", "riddikulus"];
-
-	// spell variables
-	let secretSpell;
-	let lettersInSpell;
-	let letterMask = [];
-
-	// round variables
-	let guessesLeft;
-	let numLettersLeft;
-	let lettersGuessed = [];
-
-	// game variables 
-	let winCount = 0;
-
 	// DOM variables 
 	let secretSpellDisplay = document.getElementById("guessSpell");	
 	let guessesLeftDisplay = document.getElementById("guessRemain");
 	let winsDisplay = document.getElementById("numberWins");
 	let lettersGuessedDisplay = document.getElementById("lettersGuessed");
 
-	// a function to create the game 
-	function beginGame () {
-
-		// reset round variables 
-		guessesLeft = 11;
-		lettersGuessed = [];
-
-		// initialize spell/word variables
-		letterMask = [];
-		secretSpell = spellsArray[Math.floor(Math.random() * spellsArray.length)];
-		lettersInSpell = secretSpell.split("");
-
-		// counts spaces - the number of spaces indicates the spell is more than one word long
-		let numSpaces = 0;
-		for (let i = 0; i < lettersInSpell.length; i++) {
-			if (lettersInSpell[i] == " ") {
-				numSpaces++;
-			} 
-		}
-
-		// the numLettersLeftToGuess equals the length lettersInSpell minus the spaces
-		numLettersLeft = lettersInSpell.length - numSpaces;
-
-		// here we create the mask, if the letter is a space push a <br> tag into the array, 
-		// which will seperate words when using innerHTML
-		for (let i = 0; i < lettersInSpell.length; i++){
-			if (lettersInSpell[i] === " ") {
-				letterMask.push("<br>");
-			} else {
-				letterMask.push("_");
+	function updateLetterMask(letter) {
+		for (var i = 0; i < lettersInSpell.length; i++) {
+			if(secretSpell[i] == letter){
+				letterMask[i] = letter;
 			}
 		}
-		
-		// console.log('letter mask: ' + letterMask);
-
-		// update HTML page
-		secretSpellDisplay.innerHTML = letterMask.join(" ");
-		guessesLeftDisplay.innerHTML = guessesLeft;
-		winsDisplay.innerHTML = winCount;
-
 	}
 
 	function updateNumLettersLeft(letter) {
 		for (var i = 0; i < lettersInSpell.length; i++) {
 			if(secretSpell[i] == letter){
-				letterMask[i] = letter;
 				numLettersLeft--;
 			}
 		}
@@ -102,6 +107,7 @@ window.onload = function() {
 		if(isLetterInWord && !hasLetterBeenGuessed) {
 			updateNumLettersLeft(letter);
 			updateLettersGuessed(letter);
+			updateLetterMask(letter);
 
 			console.log("letters left #: " + numLettersLeft);
 			} else if (!hasLetterBeenGuessed) { 
@@ -130,6 +136,7 @@ window.onload = function() {
 	}
 
 	beginGame();
+	pageInit(letterMask, guessesLeft, winCount);
 
 	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
@@ -140,9 +147,12 @@ window.onload = function() {
 	document.getElementById("hint").addEventListener("click", (e) => {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
+		updateLetterMask(hint);
 		updateNumLettersLeft(hint);
 		updateLettersGuessed(hint);
 
 		finishRound();
 	});
 }
+
+export { beginGame }
