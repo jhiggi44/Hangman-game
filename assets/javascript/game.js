@@ -69,6 +69,15 @@ window.onload = function() {
 
 	}
 
+	function updateNumLettersLeft(letter) {
+		for (var i = 0; i < lettersInSpell.length; i++) {
+			if(secretSpell[i] == letter){
+				letterMask[i] = letter;
+				numLettersLeft--;
+			}
+		}
+	}
+
 	async function letterCheck (letter) {
 		
 		let isLetterInWord = false;
@@ -87,12 +96,8 @@ window.onload = function() {
 
 		//Checks if letter is in spell, then sends it to corresponding blank
 		if(isLetterInWord && !hasLetterBeenGuessed){
-			for (var i = 0; i < lettersInSpell.length; i++) {
-				if(secretSpell[i] == letter){
-					letterMask[i] = letter;
-					numLettersLeft--;
-					}
-				}
+			updateNumLettersLeft(letter)
+
 			lettersGuessed.push(letter);
 			console.log("letters left #: " + numLettersLeft);
 			} else if (!hasLetterBeenGuessed) { 
@@ -123,7 +128,7 @@ window.onload = function() {
 	beginGame();
 
 	document.addEventListener("keyup", () => {
-		let userGuess = String.fromCharCode(e.keyCode).toLowerCase();
+		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
 		letterCheck(userGuess);
 		finishRound();
 	});
@@ -131,13 +136,10 @@ window.onload = function() {
 	document.getElementById("hint").addEventListener("click", (e) => {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
-		for (var i = 0; i < lettersInSpell.length; i++) {
-			if(secretSpell[i] == hint){
-				letterMask[i] = hint;
-				numLettersLeft--;
-				}
-			}
+		updateNumLettersLeft(hint);
 		lettersGuessed.push(hint);
+
+
 		finishRound();
 	});
 }
