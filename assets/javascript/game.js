@@ -11,19 +11,13 @@ let secretSpell;
 let lettersInSpell;
 let letterMask = [];
 
-// round variables
-let guessesLeft;
 let numLettersLeft;
 let lettersGuessed = [];
 
 // game variables
 let winCount = 0;
 
-// a function to create the game 
 function beginGame () {
-
-	// reset round variables 
-	guessesLeft = 11;
 	lettersGuessed = [];
 
 	// initialize spell/word variables
@@ -51,13 +45,10 @@ function beginGame () {
 			letterMask.push("_");
 		}
 	}
-}
 
-function pageInit(letterMask, guessesLeft, winCount) {
-	// update HTML page
-	secretSpellDisplay.innerHTML = letterMask.join(" ");
-	guessesLeftDisplay.innerHTML = guessesLeft;
-	winsDisplay.innerHTML = winCount;
+	return {
+		guessesLeft: 11,
+	}
 }
 
 window.onload = function() {
@@ -66,6 +57,16 @@ window.onload = function() {
 	let guessesLeftDisplay = document.getElementById("guessRemain");
 	let winsDisplay = document.getElementById("numberWins");
 	let lettersGuessedDisplay = document.getElementById("lettersGuessed");
+
+	function pageInit(letterMask, guessesLeft, winCount) {
+		// update HTML page
+		secretSpellDisplay.innerHTML = letterMask.join(" ");
+		guessesLeftDisplay.innerHTML = guessesLeft;
+		winsDisplay.innerHTML = winCount;
+	}
+
+	let { guessesLeft } = beginGame();
+	pageInit(letterMask, guessesLeft, winCount);
 
 	function updateLetterMask(letter) {
 		for (var i = 0; i < lettersInSpell.length; i++) {
@@ -134,9 +135,6 @@ window.onload = function() {
 			beginGame();
 		}
 	}
-
-	beginGame();
-	pageInit(letterMask, guessesLeft, winCount);
 
 	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
