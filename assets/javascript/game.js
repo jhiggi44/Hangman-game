@@ -123,7 +123,7 @@ window.onload = function() {
 	beginGame();
 
 	document.addEventListener("keyup", () => {
-		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+		let userGuess = String.fromCharCode(e.keyCode).toLowerCase();
 		letterCheck(userGuess);
 		finishRound();
 	});
