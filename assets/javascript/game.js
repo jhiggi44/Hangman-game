@@ -49,7 +49,7 @@ function beginGame(words) {
 	};
 }
 
-function updateLetterMask(letter) {
+function updateLetterMask(gameVariables, letter) {
 	for (var i = 0; i < gameVariables.lettersInSpell.length; i++) {
 		if(gameVariables.secretSpell[i] == letter){
 			gameVariables.letterMask[i] = letter;
@@ -69,7 +69,7 @@ function updateLettersGuessed(letter) {
 	gameVariables.lettersGuessed.push(letter);
 }
 
-function letterCheck (letter) {
+function letterCheck(letter) {
 	let isLetterInWord = false;
 	for (let i = 0; i < gameVariables.letterMask.length; i++) {
 		if (gameVariables.secretSpell[i] == letter) {
@@ -88,7 +88,7 @@ function letterCheck (letter) {
 	if(isLetterInWord && !hasLetterBeenGuessed) {
 		updateNumLettersLeft(letter);
 		updateLettersGuessed(letter);
-		updateLetterMask(letter);
+		updateLetterMask(gameVariables, letter);
 		} else if (!hasLetterBeenGuessed) { 
 			gameVariables.lettersGuessed.push(letter);
 			gameVariables.guessesLeft--;
@@ -107,16 +107,19 @@ function finishRound() {
 		alert(`You're a great wizard! The spell was ${gameVariables.secretSpell}`);
 		winsDisplay.innerHTML = winCount
 		gameVariables = beginGame();
+		pageInit(gameVariables);
 	} else if (gameVariables.guessesLeft == 0){
 		alert("Are you sure you're a wizard");
 		gameVariables = beginGame();
+		pageInit(gameVariables);
 	}
 }
 
-function pageInit(letterMask, guessesLeft) {
+function pageInit(gameVariables) {
 	// update HTML page
-	secretSpellDisplay.innerHTML = letterMask.join(" ");
-	guessesLeftDisplay.innerHTML = guessesLeft;
+	secretSpellDisplay.innerHTML = gameVariables.letterMask.join(" ");
+	guessesLeftDisplay.innerHTML = gameVariables.guessesLeft;
+	lettersGuessedDisplay.innerHTML = [];
 	winsDisplay.innerHTML = winCount;
 }	
 
@@ -130,7 +133,7 @@ window.onload = function() {
 	
 	gameVariables = beginGame();
 	
-	pageInit(gameVariables.letterMask, gameVariables.guessesLeft);
+	pageInit(gameVariables);
 
 	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
@@ -141,11 +144,11 @@ window.onload = function() {
 	document.getElementById("hint").addEventListener("click", (e) => {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
-		updateLetterMask(hint);
+		updateLetterMask(gameVariables, hint);
 		updateNumLettersLeft(hint);
 		updateLettersGuessed(hint);
 		finishRound();
 	});
 }
 
-export { beginGame }
+export { beginGame, updateLetterMask }

@@ -1,4 +1,4 @@
-import { beginGame } from "../assets/javascript/game";
+import { beginGame, updateLetterMask } from "../assets/javascript/game";
 
 describe('beginning a game', () => {
     let gameVariables;
@@ -32,3 +32,25 @@ describe('beginning a game', () => {
         expect(gameVariables.numLettersLeft).toEqual(3);
     });
 }); 
+
+describe('updating the letter mask', () => {
+    let gameVariables;
+
+    beforeEach(() => {
+        gameVariables = { 
+            secretSpell: "foo",
+            lettersInSpell: ["f", "o", "o"],
+            letterMask: ["_", "_", "_"]
+        }
+    });
+
+    test('it unmasks the letter if it is found in the word', () => {
+        updateLetterMask(gameVariables, "f");
+        expect(gameVariables.letterMask).toEqual(["f", "_", "_"]);
+    });
+
+    test('it leaves the mask alone if it is not found in the word', () => {
+        updateLetterMask(gameVariables, "z");
+        expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
+    });
+});
