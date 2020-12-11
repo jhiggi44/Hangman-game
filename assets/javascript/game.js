@@ -91,8 +91,6 @@ function letterCheck (letter) {
 		updateNumLettersLeft(letter);
 		updateLettersGuessed(letter);
 		updateLetterMask(letter);
-
-		console.log("letters left #: " + numLettersLeft);
 		} else if (!hasLetterBeenGuessed) { 
 			gameVariables.lettersGuessed.push(letter);
 			gameVariables.guessesLeft--;
@@ -101,7 +99,6 @@ function letterCheck (letter) {
 
 function finishRound() {
 	// update HTML with current stats
-	console.log(gameVariables);
 	guessesLeftDisplay.innerHTML = gameVariables.guessesLeft;
 	secretSpellDisplay.innerHTML = gameVariables.letterMask.join(" ");
 	lettersGuessedDisplay.innerHTML = gameVariables.lettersGuessed.join(" ");
@@ -127,15 +124,12 @@ function pageInit(letterMask, guessesLeft) {
 
 
 window.onload = function() {
-
-	console.log("beginning game...");
 	// DOM variables 
 	secretSpellDisplay = document.getElementById("guessSpell");	
 	guessesLeftDisplay = document.getElementById("guessRemain");
 	winsDisplay = document.getElementById("numberWins");
 	lettersGuessedDisplay = document.getElementById("lettersGuessed");
-
-	console.log("beginning game...");
+	
 	gameVariables = beginGame();
 	
 	pageInit(gameVariables.letterMask, gameVariables.guessesLeft);
