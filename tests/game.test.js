@@ -1,7 +1,8 @@
 import { 
     beginGame, 
     updateLetterMask, 
-    updateNumLettersLeft 
+    updateNumLettersLeft,
+    updateLettersGuessed
 } from "../assets/javascript/game";
 
 describe('beginning a game', () => {
@@ -62,10 +63,17 @@ describe('updating game variables', () => {
         expect(gameVariables.numLettersLeft).toEqual(2);
     });
 
-    test('it updates number of letters left when there is a match', () => {
+    test('it does not updates number of letters left when there is not a match', () => {
         expect(gameVariables.numLettersLeft).toEqual(3);
         
         updateNumLettersLeft(gameVariables, "z");
         expect(gameVariables.numLettersLeft).toEqual(3);
+    });
+
+    test('it updates the letters guessed', () => {
+        expect(gameVariables.lettersGuessed).toEqual([]);
+        
+        updateLettersGuessed(gameVariables, "f");
+        expect(gameVariables.lettersGuessed).toEqual(["f"]);
     });
 });
