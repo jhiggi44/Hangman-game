@@ -1,4 +1,8 @@
-import { beginGame, updateLetterMask } from "../assets/javascript/game";
+import { 
+    beginGame, 
+    updateLetterMask, 
+    updateNumLettersLeft 
+} from "../assets/javascript/game";
 
 describe('beginning a game', () => {
     let gameVariables;
@@ -33,15 +37,12 @@ describe('beginning a game', () => {
     });
 }); 
 
-describe('updating the letter mask', () => {
+describe('updating game variables', () => {
     let gameVariables;
+    const words = ["foo"];
 
     beforeEach(() => {
-        gameVariables = { 
-            secretSpell: "foo",
-            lettersInSpell: ["f", "o", "o"],
-            letterMask: ["_", "_", "_"]
-        }
+        gameVariables = beginGame(words);
     });
 
     test('it unmasks the letter if it is found in the word', () => {
@@ -52,5 +53,19 @@ describe('updating the letter mask', () => {
     test('it leaves the mask alone if it is not found in the word', () => {
         updateLetterMask(gameVariables, "z");
         expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
+    });
+
+    test('it updates number of letters left when there is a match', () => {
+        expect(gameVariables.numLettersLeft).toEqual(3);
+        
+        updateNumLettersLeft(gameVariables, "f");
+        expect(gameVariables.numLettersLeft).toEqual(2);
+    });
+
+    test('it updates number of letters left when there is a match', () => {
+        expect(gameVariables.numLettersLeft).toEqual(3);
+        
+        updateNumLettersLeft(gameVariables, "z");
+        expect(gameVariables.numLettersLeft).toEqual(3);
     });
 });

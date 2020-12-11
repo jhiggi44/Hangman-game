@@ -57,7 +57,7 @@ function updateLetterMask(gameVariables, letter) {
 	}
 }
 
-function updateNumLettersLeft(letter) {
+function updateNumLettersLeft(gameVariables, letter) {
 	for (var i = 0; i < gameVariables.lettersInSpell.length; i++) {
 		if(gameVariables.secretSpell[i] == letter){
 			gameVariables.numLettersLeft--;
@@ -86,7 +86,7 @@ function letterCheck(letter) {
 
 	//Checks if letter is in spell, then sends it to corresponding blank
 	if(isLetterInWord && !hasLetterBeenGuessed) {
-		updateNumLettersLeft(letter);
+		updateNumLettersLeft(gameVariables, letter);
 		updateLettersGuessed(letter);
 		updateLetterMask(gameVariables, letter);
 		} else if (!hasLetterBeenGuessed) { 
@@ -145,10 +145,10 @@ window.onload = function() {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
 		updateLetterMask(gameVariables, hint);
-		updateNumLettersLeft(hint);
+		updateNumLettersLeft(gameVariables, hint);
 		updateLettersGuessed(hint);
 		finishRound();
 	});
 }
 
-export { beginGame, updateLetterMask }
+export { beginGame, updateLetterMask, updateNumLettersLeft }
