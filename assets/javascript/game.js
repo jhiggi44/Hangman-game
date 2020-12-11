@@ -7,9 +7,7 @@ let lettersGuessedDisplay;
 let gameVariables;
 let winCount = 0;
 
-
 function beginGame(words) {
-	console.log("begin game.");
 	// initialize spell/word variables
 	const spellsArray = words || ["alohomora", 
 	"avada kedavra", "confundo","expelliarmus",
