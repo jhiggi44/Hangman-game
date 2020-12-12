@@ -1,9 +1,4 @@
-import { 
-    beginGame, 
-    updateLetterMask, 
-    updateNumLettersLeft,
-    updateLettersGuessed
-} from "../assets/javascript/game";
+import { beginGame, letterCheck } from "../assets/javascript/game";
 
 describe('beginning a game', () => {
     let gameVariables;
@@ -38,7 +33,7 @@ describe('beginning a game', () => {
     });
 }); 
 
-describe('updating game variables', () => {
+describe('when checking the guessed letter', () => {
     let gameVariables;
     const words = ["foo"];
 
@@ -46,34 +41,59 @@ describe('updating game variables', () => {
         gameVariables = beginGame(words);
     });
 
-    test('it unmasks the letter if it is found in the word', () => {
-        updateLetterMask(gameVariables, "f");
-        expect(gameVariables.letterMask).toEqual(["f", "_", "_"]);
+    describe('when the guess is in the word', () => {
+        test('unmasking the letter', () => {
+            letterCheck(gameVariables, "f");
+            expect(gameVariables.letterMask).toEqual(["f", "_", "_"]);
+        });
+    
+        test('decrement number of letters left', () => {
+            expect(gameVariables.numLettersLeft).toEqual(3);
+            
+            letterCheck(gameVariables, "f");
+            expect(gameVariables.numLettersLeft).toEqual(2);
+        });
+    
+        test('updates the letters guessed', () => {
+            expect(gameVariables.lettersGuessed).toEqual([]);
+            
+            letterCheck(gameVariables, "f");
+            expect(gameVariables.lettersGuessed).toEqual(["f"]);
+        });
+
+        test('does not decrement guesses left', () => {
+            expect(gameVariables.guessesLeft).toEqual(11);
+            
+            letterCheck(gameVariables, "f");
+            expect(gameVariables.guessesLeft).toEqual(11);
+        });
     });
 
-    test('it leaves the mask alone if it is not found in the word', () => {
-        updateLetterMask(gameVariables, "z");
-        expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
-    });
+    describe('when the guess is not in the word', () => {
+        test('does not update the mask', () => {
+            letterCheck(gameVariables, "z");
+            expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
+        });
 
-    test('it updates number of letters left when there is a match', () => {
-        expect(gameVariables.numLettersLeft).toEqual(3);
-        
-        updateNumLettersLeft(gameVariables, "f");
-        expect(gameVariables.numLettersLeft).toEqual(2);
-    });
+        test('does not decrease the number of letters left', () => {
+            expect(gameVariables.numLettersLeft).toEqual(3);
+            
+            letterCheck(gameVariables, "z");
+            expect(gameVariables.numLettersLeft).toEqual(3);
+        });
 
-    test('it does not updates number of letters left when there is not a match', () => {
-        expect(gameVariables.numLettersLeft).toEqual(3);
-        
-        updateNumLettersLeft(gameVariables, "z");
-        expect(gameVariables.numLettersLeft).toEqual(3);
-    });
+        test('updates the letters guessed', () => {
+            expect(gameVariables.lettersGuessed).toEqual([]);
+            
+            letterCheck(gameVariables, "z");
+            expect(gameVariables.lettersGuessed).toEqual(["z"]);
+        });
 
-    test('it updates the letters guessed', () => {
-        expect(gameVariables.lettersGuessed).toEqual([]);
-        
-        updateLettersGuessed(gameVariables, "f");
-        expect(gameVariables.lettersGuessed).toEqual(["f"]);
+        test('does decrement guesses left', () => {
+            expect(gameVariables.guessesLeft).toEqual(11);
+            
+            letterCheck(gameVariables, "z");
+            expect(gameVariables.guessesLeft).toEqual(10);
+        });
     });
 });

@@ -69,7 +69,13 @@ function updateLettersGuessed(gameVariables, letter) {
 	gameVariables.lettersGuessed.push(letter);
 }
 
-function letterCheck(letter) {
+function onCorrectGuess(gameVariables, letter) {
+	updateNumLettersLeft(gameVariables, letter);
+	updateLettersGuessed(gameVariables, letter);
+	updateLetterMask(gameVariables, letter);
+}
+
+function letterCheck(gameVariables, letter) {
 	let isLetterInWord = false;
 	for (let i = 0; i < gameVariables.letterMask.length; i++) {
 		if (gameVariables.secretSpell[i] == letter) {
@@ -85,14 +91,12 @@ function letterCheck(letter) {
 	}
 
 	//Checks if letter is in spell, then sends it to corresponding blank
-	if(isLetterInWord && !hasLetterBeenGuessed) {
-		updateNumLettersLeft(gameVariables, letter);
+	if (isLetterInWord && !hasLetterBeenGuessed) {
+		onCorrectGuess(gameVariables, letter)
+	} else if (!hasLetterBeenGuessed) {
 		updateLettersGuessed(gameVariables, letter);
-		updateLetterMask(gameVariables, letter);
-		} else if (!hasLetterBeenGuessed) { 
-			gameVariables.lettersGuessed.push(letter);
-			gameVariables.guessesLeft--;
-		}
+		gameVariables.guessesLeft--;
+	}
 }
 
 function finishRound() {
@@ -144,16 +148,9 @@ window.onload = function() {
 	document.getElementById("hint").addEventListener("click", (e) => {
 		e.preventDefault();
 		const hint = new Hint(secretSpell).notIn(lettersGuessed);
-		updateLetterMask(gameVariables, hint);
-		updateNumLettersLeft(gameVariables, hint);
-		updateLettersGuessed(gameVariables, hint);
+		onCorrectGuess(gameVariables, hint)
 		finishRound();
 	});
 }
 
-export { 
-	beginGame, 
-	updateLetterMask, 
-	updateNumLettersLeft, 
-	updateLettersGuessed 
-}
+export { beginGame, letterCheck }
