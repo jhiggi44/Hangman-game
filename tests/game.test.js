@@ -1,4 +1,4 @@
-import { beginGame, letterCheck } from "../assets/javascript/game";
+import { beginGame, letterCheck, checkOver } from "../assets/javascript/game";
 
 describe('beginning a game', () => {
     let gameVariables;
@@ -95,5 +95,41 @@ describe('when checking the guessed letter', () => {
             letterCheck(gameVariables, "z");
             expect(gameVariables.guessesLeft).toEqual(10);
         });
+    });
+});
+
+describe('when checking if the game is over', () => {
+    let gameVariables;
+
+    function onWin() {
+        gameVariables.wins++;
+    }
+
+    function onLoss() {
+        gameVariables.losses++;
+    }
+
+    beforeEach(() => {
+        gameVariables = {
+            wins: 0,
+            losses: 0,
+            secretSpell: "foo"
+        }
+    });
+
+    test('calls onWin when the game is won', () => {
+        gameVariables.numLettersLeft = 0;
+        checkOver(gameVariables, onWin, onLoss);
+
+        expect(gameVariables.losses).toEqual(0);
+        expect(gameVariables.wins).toEqual(1);
+    });
+
+    test('calls onLoss when the game is lost', () => {
+        gameVariables.guessesLeft = 0;
+        checkOver(gameVariables, onWin, onLoss);
+
+        expect(gameVariables.losses).toEqual(1);
+        expect(gameVariables.wins).toEqual(0);
     });
 });

@@ -99,24 +99,35 @@ function letterCheck(gameVariables, letter) {
 	}
 }
 
+function onWin(spell) {
+	winCount++
+	alert(`You're a great wizard! The spell was ${spell}`);
+	winsDisplay.innerHTML = winCount
+	gameVariables = beginGame();
+	pageInit(gameVariables);
+}
+
+function onLoss() {
+	alert("Are you sure you're a wizard");
+	gameVariables = beginGame();
+	pageInit(gameVariables);
+}
+
+function checkOver(gameVariables, onWin, onLoss) {
+	//Did user win?
+	if (gameVariables.numLettersLeft == 0) {
+		onWin(gameVariables.secretSpell);
+	} else if (gameVariables.guessesLeft == 0){
+		onLoss();
+	}
+}
+
 function finishRound() {
 	// update HTML with current stats
 	guessesLeftDisplay.innerHTML = gameVariables.guessesLeft;
 	secretSpellDisplay.innerHTML = gameVariables.letterMask.join(" ");
 	lettersGuessedDisplay.innerHTML = gameVariables.lettersGuessed.join(" ");
-
-	//Did user win?
-	if (gameVariables.numLettersLeft == 0) {
-		winCount++
-		alert(`You're a great wizard! The spell was ${gameVariables.secretSpell}`);
-		winsDisplay.innerHTML = winCount
-		gameVariables = beginGame();
-		pageInit(gameVariables);
-	} else if (gameVariables.guessesLeft == 0){
-		alert("Are you sure you're a wizard");
-		gameVariables = beginGame();
-		pageInit(gameVariables);
-	}
+	checkOver(gameVariables, onWin, onLoss);
 }
 
 function pageInit(gameVariables) {
@@ -141,7 +152,7 @@ window.onload = function() {
 
 	document.addEventListener("keyup", () => {
 		let userGuess = String.fromCharCode(event.keyCode).toLowerCase();
-		letterCheck(userGuess);
+		letterCheck(gameVariables, userGuess);
 		finishRound();
 	});
 
@@ -153,4 +164,4 @@ window.onload = function() {
 	});
 }
 
-export { beginGame, letterCheck }
+export { beginGame, letterCheck, checkOver }
