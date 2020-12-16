@@ -1,135 +1,128 @@
-import { beginGame, letterCheck, checkOver } from "../assets/javascript/game";
+import { Game } from "../assets/javascript/game";
 
-describe('beginning a game', () => {
-    let gameVariables;
+describe('starting a game', () => {
+    let game;
     const words = ["foo"];
 
     beforeEach(() => {
-        gameVariables = beginGame(words);
+        game = new Game(words);
+        game.start();
     });
 
     test('initializes the guessesLeft variable', () => {
-        expect(gameVariables.guessesLeft).toEqual(11);
+        expect(game.guessesLeft).toEqual(11);
     });
 
     test('initializes the lettersGuessed variable', () => {
-        expect(gameVariables.lettersGuessed).toEqual([]);
+        expect(game.lettersGuessed).toEqual([]);
     });
 
     test('initializes the array of spells to guess', () => {
-        expect(gameVariables.secretSpell).toEqual(words[0]);
+        expect(game.secretSpell).toEqual(words[0]);
     });
 
     test('initializes the letters in the spell', () => {
-        expect(gameVariables.lettersInSpell).toEqual(["f", "o", "o"]);
+        expect(game.lettersInSpell).toEqual(["f", "o", "o"]);
     });
 
     test('initializes the mask for the letters', () => {
-        expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
+        expect(game.letterMask).toEqual(["_", "_", "_"]);
     });
 
     test('initializes the number of letters left to guess', () => {
-        expect(gameVariables.numLettersLeft).toEqual(3);
+        expect(game.numLettersLeft).toEqual(3);
     });
 }); 
 
 describe('when checking the guessed letter', () => {
-    let gameVariables;
+    let game;
     const words = ["foo"];
 
     beforeEach(() => {
-        gameVariables = beginGame(words);
+        game = new Game(words);
+        game.start();
     });
 
     describe('when the guess is in the word', () => {
         test('unmasking the letter', () => {
-            letterCheck(gameVariables, "f");
-            expect(gameVariables.letterMask).toEqual(["f", "_", "_"]);
+            game.letterCheck("f");
+            expect(game.letterMask).toEqual(["f", "_", "_"]);
         });
     
         test('decrement number of letters left', () => {
-            expect(gameVariables.numLettersLeft).toEqual(3);
+            expect(game.numLettersLeft).toEqual(3);
             
-            letterCheck(gameVariables, "f");
-            expect(gameVariables.numLettersLeft).toEqual(2);
+            game.letterCheck("f");
+            expect(game.numLettersLeft).toEqual(2);
         });
     
         test('updates the letters guessed', () => {
-            expect(gameVariables.lettersGuessed).toEqual([]);
+            expect(game.lettersGuessed).toEqual([]);
             
-            letterCheck(gameVariables, "f");
-            expect(gameVariables.lettersGuessed).toEqual(["f"]);
+            game.letterCheck("f");
+            expect(game.lettersGuessed).toEqual(["f"]);
         });
 
         test('does not decrement guesses left', () => {
-            expect(gameVariables.guessesLeft).toEqual(11);
+            expect(game.guessesLeft).toEqual(11);
             
-            letterCheck(gameVariables, "f");
-            expect(gameVariables.guessesLeft).toEqual(11);
+            game.letterCheck("f");
+            expect(game.guessesLeft).toEqual(11);
         });
     });
 
     describe('when the guess is not in the word', () => {
         test('does not update the mask', () => {
-            letterCheck(gameVariables, "z");
-            expect(gameVariables.letterMask).toEqual(["_", "_", "_"]);
+            game.letterCheck("z");
+            expect(game.letterMask).toEqual(["_", "_", "_"]);
         });
 
         test('does not decrease the number of letters left', () => {
-            expect(gameVariables.numLettersLeft).toEqual(3);
+            expect(game.numLettersLeft).toEqual(3);
             
-            letterCheck(gameVariables, "z");
-            expect(gameVariables.numLettersLeft).toEqual(3);
+            game.letterCheck("z");
+            expect(game.numLettersLeft).toEqual(3);
         });
 
         test('updates the letters guessed', () => {
-            expect(gameVariables.lettersGuessed).toEqual([]);
+            expect(game.lettersGuessed).toEqual([]);
             
-            letterCheck(gameVariables, "z");
-            expect(gameVariables.lettersGuessed).toEqual(["z"]);
+            game.letterCheck("z");
+            expect(game.lettersGuessed).toEqual(["z"]);
         });
 
         test('does decrement guesses left', () => {
-            expect(gameVariables.guessesLeft).toEqual(11);
+            expect(game.guessesLeft).toEqual(11);
             
-            letterCheck(gameVariables, "z");
-            expect(gameVariables.guessesLeft).toEqual(10);
+            game.letterCheck("z");
+            expect(game.guessesLeft).toEqual(10);
         });
     });
 });
 
 describe('when checking if the game is over', () => {
-    let gameVariables;
+    let game;
 
     function onWin() {
-        gameVariables.wins++;
+        return "you win";
     }
 
     function onLoss() {
-        gameVariables.losses++;
+        return "you lose";
     }
 
     beforeEach(() => {
-        gameVariables = {
-            wins: 0,
-            losses: 0,
-            secretSpell: "foo"
-        }
+        game = new Game(["foo"]);
+        game.start();
     });
 
     test('calls onWin when the game is won', () => {
-        gameVariables.numLettersLeft = 0;
-        checkOver(gameVariables, onWin, onLoss);
-
-        expect(gameVariables.losses).toEqual(0);
-        expect(gameVariables.wins).toEqual(1);
+        game.numLettersLeft = 0;
+        expect(game.checkOver(onWin, onLoss)).toEqual("you win");
     });
 
     test('calls onLoss when the game is lost', () => {
-        gameVariables.guessesLeft = 0;
-        checkOver(gameVariables, onWin, onLoss);
-
-        expect(gameVariables.losses).toEqual(1);
-        expect(gameVariables.wins).toEqual(0);
+        game.guessesLeft = 0;
+        expect(game.checkOver(onWin, onLoss)).toEqual("you lose");
     });
 });
